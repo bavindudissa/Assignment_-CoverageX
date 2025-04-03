@@ -6,7 +6,6 @@ using to_do_api.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS setup
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
@@ -17,17 +16,14 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add AutoMapper 
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// Configure SQL Server (Ensure connection string is correct in appsettings)
 builder.Services.AddDbContext<TodoAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register repositories and services
 builder.Services.AddScoped<ITaskRepository, TaskRepository>(); 
 
-// Register controllers
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -40,10 +36,8 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-// Use cors
 app.UseCors("AllowSpecificOrigin");
 
-// Map controller routes
-app.MapControllers();  // Ensure this is correctly placed
+app.MapControllers();  
 
 app.Run();
