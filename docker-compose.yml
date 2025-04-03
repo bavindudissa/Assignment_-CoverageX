@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  database:
+    image: mcr.microsoft.com/azure-sql-edge
+    container_name: sql
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=MyPass@word
+      - MSSQL_PID=Developer
+      - MSSQL_USER=SA
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+  backend:
+    build:
+      context: ./backend/to-do-api  # Path to the backend Dockerfile
+    ports:
+      - "5001:5001"  # Expose port 5000 for the backend
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=sql,1433;Database=TodoApp;User=sa;Password=MyPass@word;TrustServerCertificate=true
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./frontend/to-do-web  # Path to the frontend Dockerfile
+    ports:
+      - "3000:80"  # Expose port 3000 for frontend
+    networks:
+      - app-network
+    environment:
+      - VITE_API_URL=http://backend:5001/api  # Backend API URL
+    depends_on:
+      - backend  # Ensure backend starts first
+
+networks:
+  app-network:
+    driver: bridge
