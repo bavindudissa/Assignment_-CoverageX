@@ -7,7 +7,7 @@ import axios from 'axios';
 jest.mock('axios');
 
 beforeEach(() => {
-    process.env.VITE_API_URL = 'http://localhost:5133/api';
+    process.env.VITE_API_URL = 'http://localhost:5001/api';
 });
 
 describe('TaskList Component', () => {
@@ -61,7 +61,7 @@ describe('TaskList Component', () => {
       expect(markAsDoneButton).toHaveTextContent('Done');
     });
 
-    expect(axios.put).toHaveBeenCalledWith('http://localhost:5133/api/task/1/complete');
+    expect(axios.put).toHaveBeenCalledWith('http://localhost:5001/api/task/1/complete');
   });
 
   // Test for handling an API error when fetching tasks
